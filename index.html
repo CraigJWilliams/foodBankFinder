@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <title>Food Bank Finder | Find a Food Bank Near You</title>
 </head>
@@ -17,11 +18,14 @@
         <h1>Food Bank Finder</h1>
     </nav>
     <section class="search grid">
-        <img src="imgs/mainLogo200x200.png" alt="">
+        <div class="loading-spinner-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+        <img src="imgs/mainLogo200x200.png" alt="Food bank finder logo">
         <h2>Search for a foodbank near you.</h2>
         <form class="search-form">
-            <input type="text" placeholder="Enter Your Postcode, Address or City" id="user-input">
-            <button class="button" type="submit">Search</button>
+            <input type="text" placeholder="Enter Your Postcode, Address or City" id="user-input" required>
+            <button class="button" type="submit"><span class="material-icons md-18">search</span>Search</button>
         </form>
     </section>
     <section class="foodbank-list">
