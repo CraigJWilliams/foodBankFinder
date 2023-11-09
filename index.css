@@ -9,8 +9,13 @@ body,
 p,
 a,
 ul,
+ol,
 li,
-h1 {
+h1,
+h2,
+h3.h4.h5,
+h6,
+.material-icons {
     margin: 0;
     padding: 0;
     text-decoration: none;
@@ -56,14 +61,22 @@ h2 {
 
 h3 {
     font-size: 2.2em;
-    margin: 0;
 }
 
 h4 {
-    font-size: 2em;
+    font-size: 2.2em;
 }
 
-p {
+h5 {
+    font-size: 1.5em;
+}
+
+h6 {
+    font-size: 1.4em;
+}
+
+p,
+.material-icons {
     font-size: 1em;
 }
 
@@ -194,7 +207,7 @@ p {
 .search-form input {
     width: 75%;
     margin: 1em 0;
-    padding: 1em;
+    padding: 0.75em;
     border-radius: 8px;
     font-size: 1em;
 }
@@ -223,14 +236,26 @@ p {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: start;
 }
 
 .foodbank-card-text h4 {
-    margin-bottom: 1em;
     margin-top: 0;
+    margin-bottom: 0.5em;
 }
+
+.foodbank-card-text-info h5 {
+    margin-bottom: 0.5em;
+}
+
+.foodbank-card-text-info {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-evenly;
+}
+
 
 .foodbank-card-image {
     grid-column: 1/9;
@@ -256,6 +281,86 @@ p {
 .button-row a {
     width: 100%;
     margin: 1em 2em 0 2em;
+}
+
+.needs-modal-container {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease-in-out;
+    z-index: 1;
+    display: block;
+    transform: scale(0);
+    transition: transform 0.2s ease-in-out;
+}
+
+.needs-modal {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--primary);
+    border-radius: 10px;
+    z-index: 2;
+    height: fit-content;
+    width: 80%;
+    padding: 1em;
+    overflow-y: scroll;
+    max-height: 20em;
+}
+
+.needs-modal-content {
+    overflow-y: scroll;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    height: 100%;
+    width: 100%;
+}
+
+.needs-modal-content li {
+    font-size: 1em;
+}
+
+.needs-modal-content h6,
+.needs-modal-content p {
+    margin-bottom: 0.5em;
+}
+
+
+
+.modal-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 4;
+}
+
+
+.line1,
+.line2 {
+    position: absolute;
+    width: 100%;
+    height: 0.2em;
+    background-color: var(--secondary);
+    transform-origin: center;
+}
+
+.line1 {
+    transform: rotate(45deg);
+}
+
+.line2 {
+    transform: rotate(-45deg);
 }
 
 /* Media queries */
