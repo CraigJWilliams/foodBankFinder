@@ -42,7 +42,10 @@ const getFoodbanks = async () => {
 const displayFoodbanks = (foodbanks) => {
     const foodbankList = document.querySelector('.foodbank-list')
     // add a title to the foodbank list container
-    foodbankList.innerHTML = '<h3>Foodbanks Near You</h3>'
+    foodbankList.innerHTML = `
+    <h4>Foodbanks Near You</h4>
+    <p>${foodbanks.length} results found in ${userInput.value}</p>
+`
     // create a card for every foodbank from the search results
     foodbanks.forEach(({ name, address, phone, email, distance_mi, urls }) => {
         const foodbankCard = `
@@ -67,6 +70,7 @@ const displayFoodbanks = (foodbanks) => {
         </div>
     </div>
 `
+
         // add cards to the container
         foodbankList.innerHTML += foodbankCard
 
