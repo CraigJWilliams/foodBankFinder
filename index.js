@@ -2,20 +2,40 @@ const searchForm = document.querySelector('.search-form')
 const userInput = document.querySelector('#user-input')
 
 
-const getFoodbanks = async (e) => {
+const postcodeValidation = async (e) => {
     e.preventDefault()
     // show loading spinner
     showSpinner()
     try {
+        const res = await fetch(`https://api.postcodes.io/postcodes/${userInput.value}/validate`)
+        const data = await res.json()
+        console.log(data.result)
+        if (!res.ok || !data.result) {
+            showPostcodeError()
+        } else {
+            await getFoodbanks()
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getFoodbanks = async () => {
+    try {
         const res = await fetch(`https://www.givefood.org.uk/api/2/foodbanks/search/?address=${userInput.value}`)
         if (!res.ok) {
             showError()
+        } else {
+            const data = await res.json()
+            // run function to show data
+            displayFoodbanks(data)
         }
-        const data = await res.json()
-        // run function to show data
-        displayFoodbanks(data)
     } catch (error) {
         console.log(error)
+    } finally {
+        // reset the user input
+        searchForm.reset()
+        hideSpinner()
     }
 }
 
@@ -51,12 +71,9 @@ const displayFoodbanks = (foodbanks) => {
         foodbankList.innerHTML += foodbankCard
 
     })
-    // hide the loading spinner
-    hideSpinner()
     // scroll to the first card
     scrollToCard(foodbankList)
-    // reset the user input
-    searchForm.reset()
+
 }
 
 
@@ -69,7 +86,12 @@ const hideSpinner = () => {
 }
 // show error to the user
 const showError = () => {
+    hideSpinner()
     document.querySelector('.search').innerHTML += `<p>Error fetching data, please try again after some time.</p>`
+}
+const showPostcodeError = () => {
+    hideSpinner()
+    document.querySelector('.search').innerHTML += `<p>Error fetching data, please check your postcode and try again</p>`
 }
 
 const scrollToCard = (foodbankList) => {
@@ -77,4 +99,4 @@ const scrollToCard = (foodbankList) => {
 };
 
 
-searchForm.addEventListener('submit', getFoodbanks)
+searchForm.addEventListener('submit', postcodeValidation)
