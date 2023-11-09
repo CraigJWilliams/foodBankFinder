@@ -67,7 +67,9 @@ p {
     font-size: 1em;
 }
 
-.button {
+.button,
+.website-button,
+.donate-button {
     padding: 0.5em 0.75em;
     border-radius: 8px;
     border: 2px solid var(--secondary);
@@ -85,6 +87,25 @@ p {
     background-color: transparent;
     color: var(--secondary);
 }
+
+.website-button {
+    background-color: var(--primary);
+    border: 2px solid var(--primary);
+    color: var(--secondary);
+}
+
+.website-button:hover,
+.donate-button:hover {
+    background-color: transparent;
+    color: var(--primary);
+}
+
+.donate-button {
+    background-color: #ede621;
+    border: 2px solid #ede621;
+    color: var(--secondary);
+}
+
 
 .grid {
     display: grid;
@@ -178,6 +199,10 @@ p {
     font-size: 1em;
 }
 
+.error {
+    color: var(--red);
+}
+
 /* foodbank card */
 .foodbank-list {
     margin-top: 2em;
@@ -219,6 +244,18 @@ p {
 
 .foodbank-card p {
     margin: 0.25em 0;
+    padding-right: 1em;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.button-row a {
+    width: 100%;
+    margin: 1em 2em 0 2em;
 }
 
 /* Media queries */

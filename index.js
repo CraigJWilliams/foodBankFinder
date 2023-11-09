@@ -1,15 +1,13 @@
 const searchForm = document.querySelector('.search-form')
 const userInput = document.querySelector('#user-input')
 
-
+// check users postcode input
 const postcodeValidation = async (e) => {
     e.preventDefault()
-    // show loading spinner
     showSpinner()
     try {
         const res = await fetch(`https://api.postcodes.io/postcodes/${userInput.value}/validate`)
         const data = await res.json()
-        console.log(data.result)
         if (!res.ok || !data.result) {
             showPostcodeError()
         } else {
@@ -20,6 +18,7 @@ const postcodeValidation = async (e) => {
     }
 }
 
+// get foodbanks near the users location
 const getFoodbanks = async () => {
     try {
         const res = await fetch(`https://www.givefood.org.uk/api/2/foodbanks/search/?address=${userInput.value}`)
@@ -27,7 +26,6 @@ const getFoodbanks = async () => {
             showError()
         } else {
             const data = await res.json()
-            // run function to show data
             displayFoodbanks(data)
         }
     } catch (error) {
@@ -39,12 +37,13 @@ const getFoodbanks = async () => {
     }
 }
 
+// display the foodbanks in cards
 const displayFoodbanks = (foodbanks) => {
     const foodbankList = document.querySelector('.foodbank-list')
     // add a title to the foodbank list container
     foodbankList.innerHTML = `
     <h4>Foodbanks Near You</h4>
-    <p>${foodbanks.length} results found in ${userInput.value}</p>
+    <p>${foodbanks.length} Results found in ${userInput.value.toUpperCase()}</p>
 `
     // create a card for every foodbank from the search results
     foodbanks.forEach(({ name, address, phone, email, distance_mi, urls }) => {
@@ -65,21 +64,22 @@ const displayFoodbanks = (foodbanks) => {
         email
         </span> Email: ${email} </p>
         </div>
+
         <div class="foodbank-card-image">
         <img src="${urls.map}" alt="${name} google maps">
+        <div class="button-row">
+        <a class="website-button" href="${urls.homepage}" target="_blank">Visit Website</a>
+        <a class="donate-button" target="_blank">Donate</a>
+        </div>
         </div>
     </div>
 `
-
         // add cards to the container
         foodbankList.innerHTML += foodbankCard
-
     })
     // scroll to the first card
     scrollToCard(foodbankList)
-
 }
-
 
 // show or hide loading spinner when data is fetched
 const showSpinner = () => {
@@ -95,12 +95,12 @@ const showError = () => {
 }
 const showPostcodeError = () => {
     hideSpinner()
-    document.querySelector('.search').innerHTML += `<p>Error fetching data, please check your postcode and try again</p>`
+    document.querySelector('.search').innerHTML += `<p class="error">Error fetching data, please check your postcode and try again</p>`
 }
 
 const scrollToCard = (foodbankList) => {
     foodbankList.scrollIntoView();
-};
+}
 
 
 searchForm.addEventListener('submit', postcodeValidation)
