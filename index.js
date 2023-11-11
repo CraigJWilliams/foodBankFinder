@@ -61,7 +61,6 @@ const displayFoodbanks = (foodbanks) => {
     foodbanks.forEach(({ name, address, phone, email, distance_mi, urls, needs, lat_lng }) => {
         // create content to be used for card and map pop up
         const foodbankContent = `
-        <div class="foodbank-card-text">
             <h4>${name}</h4>
             <h5>Contact Details:</h5>
             <p><span class="material-icons md-18">
@@ -76,12 +75,15 @@ const displayFoodbanks = (foodbanks) => {
             <p><span class="material-icons md-18">
             email
             </span> Email: ${email} </p>
-            </div>
     `
         // create content for the card only
         const foodbankCard = `
     <div class="foodbank-card grid">
+    <div class="foodbank-card-text">
+
       ${foodbankContent}
+      </div>
+
         <div class="foodbank-card-image">
         <img src="${urls.map}" alt="${name} google maps">
         <div class="button-row">
@@ -100,7 +102,8 @@ const displayFoodbanks = (foodbanks) => {
     })
     // scroll to the first card
     scrollToCard(titleContainer)
-    setMap(toolTipData)
+    // save tooltipdata to local storage
+    saveData(toolTipData)
 }
 // get needs of individual foodbank
 const getNeeds = async (e) => {
@@ -190,6 +193,8 @@ const showMap = () => {
     foodbankList.style.display = 'none'
     document.querySelector('.map-btn').classList.remove('inactive')
     document.querySelector('.list-btn').classList.add('inactive')
+    // retrieve saved tooltipdata
+    getData()
 }
 // show list view and change button colours
 const showList = () => {
@@ -228,8 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
 let map = null;  // This variable will hold the map instance
 let markers = L.layerGroup()
 const setMap = (toolTipData) => {
+    console.log(toolTipData)
     // Convert lat long string to 2 numbers for the first item
-    const [firstLat, firstLng] = toolTipData[0].lat_lng.split(',').map(Number);
+    const [firstLat, firstLng] = toolTipData[0].lat_lng.split(',').map(Number)
     // check if the map has been initialised
     if (map == null) {
         // initialise map only if it hasn't been initialised before
@@ -259,10 +265,22 @@ const setMap = (toolTipData) => {
     // Iterate over each item in toolTipData
     toolTipData.forEach((item) => {
         // Convert lat long strings to 2 numbers
-        const [lat, lng] = item.lat_lng.split(',').map(Number);
+        const [lat, lng] = item.lat_lng.split(',').map(Number)
         // Create a marker with the custom icon and bind a popup to it
+        const popupOptions = { className: "custom-popup", id: 'popup' }
         L.marker([lat, lng], { icon: logo })
             .addTo(markers)
-            .bindPopup(item.content)
+            .bindPopup(item.content, popupOptions)
     })
 }
+// save tooltipdata to localstorage to retrieve when map is rendered
+const saveData = (toolTipData) => {
+    localStorage.setItem("toolTipData", JSON.stringify(toolTipData))
+}
+// retrieve tooltipdata and pass it to the map to be rendered
+const getData = () => {
+    const returnedData = JSON.parse(localStorage.getItem("toolTipData"))
+    setMap(returnedData)
+}
+
+
