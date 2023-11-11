@@ -31,6 +31,8 @@ body {
     color: var(--secondary);
     overflow-x: hidden;
     font-size: 16px;
+    box-sizing: border-box;
+
 }
 
 body,
@@ -82,23 +84,33 @@ p,
 
 .button,
 .website-button,
-.donate-button {
+.donate-button,
+.inactive,
+.search-button {
     padding: 0.5em 0.75em;
     border-radius: 8px;
-    border: 2px solid var(--secondary);
     font-size: 1em;
     transition: all 0.2s ease-in-out;
-    background-color: var(--secondary);
-    color: var(--primary);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.search-button {
+    background-color: var(--secondary);
+    color: var(--primary);
+    border: 2px solid var(--secondary);
+}
 
-.button:hover {
+
+.search-button:hover {
     background-color: transparent;
     color: var(--secondary);
+}
+
+.button:active {
+    background-color: var(--secondary);
+    color: var(--primary);
 }
 
 .website-button {
@@ -119,6 +131,12 @@ p,
     color: var(--secondary);
 }
 
+.map-btn,
+.list-btn {
+    background-color: var(--secondary);
+    color: var(--primary);
+    border: 2px solid var(--secondary);
+}
 
 .grid {
     display: grid;
@@ -217,10 +235,16 @@ p,
 }
 
 /* foodbank card */
-.foodbank-list {
+.map-view {
+    display: block;
+}
+
+.map-view,
+.content {
     margin-top: 2em;
     padding: 2em;
 }
+
 
 .foodbank-card {
     border-radius: 8px;
@@ -282,6 +306,19 @@ p,
     width: 100%;
     margin: 1em 0.75em 0 0.75em;
 }
+
+.view-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em 0 0 0;
+}
+
+.inactive {
+    background-color: transparent;
+    color: var(--secondary);
+}
+
 
 .needs-modal-container {
     position: fixed;
@@ -361,6 +398,17 @@ p,
 
 .line2 {
     transform: rotate(-45deg);
+}
+
+.map-view {
+    margin: auto;
+    width: 100%;
+}
+
+#map {
+    width: 80%;
+    aspect-ratio: 1/1;
+    margin: auto;
 }
 
 /* Media queries */

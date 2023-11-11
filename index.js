@@ -1,6 +1,8 @@
 const searchForm = document.querySelector('.search-form')
 const userInput = document.querySelector('#user-input')
 const needsModal = document.querySelector('.needs-modal-container')
+const foodbankList = document.querySelector('.foodbank-list')
+const titleContainer = document.querySelector('.title')
 
 // check users postcode input
 const postcodeValidation = async (e) => {
@@ -40,35 +42,42 @@ const getFoodbanks = async () => {
 
 // display the foodbanks in cards
 const displayFoodbanks = (foodbanks) => {
-    const foodbankList = document.querySelector('.foodbank-list')
-    // add a title to the foodbank list container
-    foodbankList.innerHTML = `
-    <h4>Foodbanks Near You</h4>
-    <p>${foodbanks.length} Results found in ${userInput.value.toUpperCase()}</p>
+    foodbankList.style.display = 'block'
+    let lat_lngArr = []
+    let toolTipData = []
+    foodbankList.innerHTML = ''
+    // add a title to the content  container
+    titleContainer.innerHTML = `
+<h4>Foodbanks Near You</h4>
+<p>${foodbanks.length} Results found in ${userInput.value.toUpperCase()}</p>
+<div class="view-buttons">
+<button class="button list-btn">List View</button>
+<button class ="button inactive map-btn">Map View</button>
+</div>
 `
     // create a card for every foodbank from the search results
-    foodbanks.forEach(({ name, address, phone, email, distance_mi, urls, needs }) => {
+    foodbanks.forEach(({ name, address, phone, email, distance_mi, urls, needs, lat_lng }) => {
+        const foodbankContent = `
+        <div class="foodbank-card-text">
+            <h4>${name}</h4>
+            <h5>Contact Details:</h5>
+            <p><span class="material-icons md-18">
+            home
+            </span> Address: ${address}</p>
+            <p><span class="material-icons md-18">
+            location_on
+            </span> Distance: ${distance_mi} miles</p>
+            <p><span class="material-icons md-18">
+            phone
+            </span> Phone: ${phone} </p>
+            <p><span class="material-icons md-18">
+            email
+            </span> Email: ${email} </p>
+            </div>
+    `
         const foodbankCard = `
     <div class="foodbank-card grid">
-    <div class="foodbank-card-text">
-        <h4>${name}</h4>
-        <div class="foodbank-card-text-info">
-        <h5>Contact Details:</h5>
-        <p><span class="material-icons md-18">
-        home
-        </span> Address: ${address}</p>
-        <p><span class="material-icons md-18">
-        location_on
-        </span> Distance: ${distance_mi} miles</p>
-        <p><span class="material-icons md-18">
-        phone
-        </span> Phone: ${phone} </p>
-        <p><span class="material-icons md-18">
-        email
-        </span> Email: ${email} </p>
-        </div>
-        </div>
-
+      ${foodbankContent}
         <div class="foodbank-card-image">
         <img src="${urls.map}" alt="${name} google maps">
         <div class="button-row">
@@ -80,11 +89,15 @@ const displayFoodbanks = (foodbanks) => {
 `
         // add cards to the container
         foodbankList.innerHTML += foodbankCard
+        titleContainer.style.display = 'block'
+        lat_lngArr.push(lat_lng)
+        toolTipData.push({ lat_lng, content: foodbankContent });
     })
     // scroll to the first card
-    scrollToCard(foodbankList)
-}
+    scrollToCard(titleContainer)
+    setMap(toolTipData)
 
+}
 // get needs of individual foodbank
 const getNeeds = async (e) => {
     showSpinner()
@@ -122,7 +135,6 @@ const showNeedsModal = (data) => {
 
     }
 }
-
 const showDefaultModalList = () => {
     document.querySelector('.needs-modal-content').innerHTML = `
     <h6>No current data available</h6>
@@ -172,6 +184,21 @@ const closeModal = () => {
     needsModal.style.transform = 'scale(0)'
 }
 
+const showMap = () => {
+    document.querySelector('.map-view').style.display = 'block'
+    foodbankList.style.display = 'none'
+    document.querySelector('.map-btn').classList.remove('inactive')
+    document.querySelector('.list-btn').classList.add('inactive')
+}
+
+const showList = () => {
+    document.querySelector('.map-view').style.display = 'none'
+    foodbankList.style.display = 'block'
+    document.querySelector('.map-btn').classList.add('inactive')
+    document.querySelector('.list-btn').classList.remove('inactive')
+}
+
+
 
 // event listeners
 searchForm.addEventListener('submit', postcodeValidation)
@@ -186,8 +213,55 @@ document.addEventListener('click', (e) => {
         closeModal()
     }
 })
+document.addEventListener('click', (e) => {
+    if (e.target && e.target.classList.contains('map-btn')) {
+        showMap()
+    } else if (e.target && e.target.classList.contains('list-btn')) {
+        showList()
+    }
+})
 
 
-document.addEventListener('DOMContentLoaded', (e) => {
+document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.modal-close-btn').addEventListener('click', closeModal)
 })
+
+// map 
+const setMap = (toolTipData) => {
+    console.log('set map')
+    // Convert lat long string to 2 numbers for the first item
+    const [firstLat, firstLng] = toolTipData[0].lat_lng.split(',').map(Number);
+    console.log(toolTipData[0].lat_lng)
+    // Initialize map
+    const map = L.map('map', {
+        center: [firstLat, firstLng],
+        zoom: 12
+    });
+
+    // Add tile layer to the map
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Define the custom icon
+    const logo = L.icon({
+        iconUrl: 'imgs/mainLogo200x200.png',
+        iconSize: [52, 52],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76]
+    });
+
+    // Iterate over each item in toolTipData
+    toolTipData.forEach((item) => {
+        // Convert lat long strings to 2 numbers
+        const [lat, lng] = item.lat_lng.split(',').map(Number);
+
+        // Create a marker with the custom icon and bind a popup to it
+        L.marker([lat, lng], { icon: logo })
+            .addTo(map)
+            .bindPopup(item.content); // Bind the popup directly to the marker
+    });
+
+}
+
+
