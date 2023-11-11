@@ -12,6 +12,7 @@ const postcodeValidation = async (e) => {
         const res = await fetch(`https://api.postcodes.io/postcodes/${userInput.value}/validate`)
         const data = await res.json()
         if (!res.ok || !data.result) {
+            // shows error if postcode is invalid
             showPostcodeError()
         } else {
             await getFoodbanks()
@@ -36,17 +37,18 @@ const getFoodbanks = async () => {
     } finally {
         // reset the user input
         searchForm.reset()
+        // hide loading spinner
         hideSpinner()
     }
 }
 
 // display the foodbanks in cards
 const displayFoodbanks = (foodbanks) => {
+    // show the foodbank list container
     foodbankList.style.display = 'block'
-    let lat_lngArr = []
     let toolTipData = []
     foodbankList.innerHTML = ''
-    // add a title to the content  container
+    // add a title, count and buttons to the content  container
     titleContainer.innerHTML = `
 <h4>Foodbanks Near You</h4>
 <p>${foodbanks.length} Results found in ${userInput.value.toUpperCase()}</p>
@@ -57,6 +59,7 @@ const displayFoodbanks = (foodbanks) => {
 `
     // create a card for every foodbank from the search results
     foodbanks.forEach(({ name, address, phone, email, distance_mi, urls, needs, lat_lng }) => {
+        // create content to be used for card and map pop up
         const foodbankContent = `
         <div class="foodbank-card-text">
             <h4>${name}</h4>
@@ -75,6 +78,7 @@ const displayFoodbanks = (foodbanks) => {
             </span> Email: ${email} </p>
             </div>
     `
+        // create content for the card only
         const foodbankCard = `
     <div class="foodbank-card grid">
       ${foodbankContent}
@@ -89,14 +93,14 @@ const displayFoodbanks = (foodbanks) => {
 `
         // add cards to the container
         foodbankList.innerHTML += foodbankCard
+        // show the title container
         titleContainer.style.display = 'block'
-        lat_lngArr.push(lat_lng)
-        toolTipData.push({ lat_lng, content: foodbankContent });
+        // add location and html content to array
+        toolTipData.push({ lat_lng, content: foodbankContent })
     })
     // scroll to the first card
     scrollToCard(titleContainer)
     setMap(toolTipData)
-
 }
 // get needs of individual foodbank
 const getNeeds = async (e) => {
@@ -104,9 +108,6 @@ const getNeeds = async (e) => {
     try {
         const res = await fetch(`https://www.givefood.org.uk/api/2/need/${e.target.id}/`)
         if (!res.ok) {
-            // to be updated to show the user the error
-            // 
-            // 
             console.log('Error fetching data')
         } else {
             const data = await res.json()
@@ -118,7 +119,7 @@ const getNeeds = async (e) => {
         hideSpinner()
     }
 }
-
+// show modal with list of foodbank needs
 const showNeedsModal = (data) => {
     if (data.needs.toLowerCase() == 'unknown') {
         showDefaultModalList()
@@ -132,9 +133,9 @@ const showNeedsModal = (data) => {
             <li>${item}</li>`
         }
         needsModal.style.transform = 'scale(1)'
-
     }
 }
+// show default list when no data is ava
 const showDefaultModalList = () => {
     document.querySelector('.needs-modal-content').innerHTML = `
     <h6>No current data available</h6>
@@ -155,7 +156,6 @@ const showDefaultModalList = () => {
     <li>Toilet Rolls </li>
     </ol>`
     needsModal.style.transform = 'scale(1)'
-
 }
 
 
@@ -166,11 +166,12 @@ const showSpinner = () => {
 const hideSpinner = () => {
     document.querySelector('.loading-spinner-overlay').style.display = 'none'
 }
-// show error to the user
+// show error to the user if an error occurs
 const showError = () => {
     hideSpinner()
     document.querySelector('.search').innerHTML += `<p>Error fetching data, please try again after some time.</p>`
 }
+// show error if postcode is invalid
 const showPostcodeError = () => {
     hideSpinner()
     document.querySelector('.search').innerHTML += `<p class="error">Error fetching data, please check your postcode and try again</p>`
@@ -183,22 +184,20 @@ const scrollToCard = (foodbankList) => {
 const closeModal = () => {
     needsModal.style.transform = 'scale(0)'
 }
-
+// show map view and change button colours
 const showMap = () => {
     document.querySelector('.map-view').style.display = 'block'
     foodbankList.style.display = 'none'
     document.querySelector('.map-btn').classList.remove('inactive')
     document.querySelector('.list-btn').classList.add('inactive')
 }
-
+// show list view and change button colours
 const showList = () => {
     document.querySelector('.map-view').style.display = 'none'
     foodbankList.style.display = 'block'
     document.querySelector('.map-btn').classList.add('inactive')
     document.querySelector('.list-btn').classList.remove('inactive')
 }
-
-
 
 // event listeners
 searchForm.addEventListener('submit', postcodeValidation)
@@ -221,47 +220,49 @@ document.addEventListener('click', (e) => {
     }
 })
 
-
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.modal-close-btn').addEventListener('click', closeModal)
 })
 
 // map 
+let map = null;  // This variable will hold the map instance
+let markers = L.layerGroup()
 const setMap = (toolTipData) => {
-    console.log('set map')
     // Convert lat long string to 2 numbers for the first item
     const [firstLat, firstLng] = toolTipData[0].lat_lng.split(',').map(Number);
-    console.log(toolTipData[0].lat_lng)
-    // Initialize map
-    const map = L.map('map', {
-        center: [firstLat, firstLng],
-        zoom: 12
-    });
-
-    // Add tile layer to the map
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    // Define the custom icon
+    // check if the map has been initialised
+    if (map == null) {
+        // initialise map only if it hasn't been initialised before
+        map = L.map('map', {
+            center: [firstLat, firstLng],
+            zoom: 12
+        })
+        // Add tile layer to the map
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map)
+        // add the markers group to the map
+        markers.addTo(map)
+    } else {
+        // If map already exists, update center
+        map.setView([firstLat, firstLng], 12)
+        // and remove existing markers
+        markers.clearLayers()
+    }
+    // custom icon
     const logo = L.icon({
         iconUrl: 'imgs/mainLogo200x200.png',
         iconSize: [52, 52],
         iconAnchor: [22, 94],
         popupAnchor: [-3, -76]
-    });
-
+    })
     // Iterate over each item in toolTipData
     toolTipData.forEach((item) => {
         // Convert lat long strings to 2 numbers
         const [lat, lng] = item.lat_lng.split(',').map(Number);
-
         // Create a marker with the custom icon and bind a popup to it
         L.marker([lat, lng], { icon: logo })
-            .addTo(map)
-            .bindPopup(item.content); // Bind the popup directly to the marker
-    });
-
+            .addTo(markers)
+            .bindPopup(item.content)
+    })
 }
-
-
