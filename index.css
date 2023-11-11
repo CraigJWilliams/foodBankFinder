@@ -160,7 +160,8 @@ p,
     background-color: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    z-index: 1;
+    z-index: 3;
+
 }
 
 .loading-spinner {
@@ -170,6 +171,8 @@ p,
     border: 16px solid var(--primary);
     border-top: 16px solid var(--red);
     animation: loading 1s linear infinite;
+    z-index: 4;
+
 }
 
 @keyframes loading {
@@ -408,6 +411,36 @@ p,
     height: 40em;
     grid-column: 1/9;
     margin: auto;
+}
+
+
+.leaflet-popup-content p {
+    font-size: 1em;
+    margin: 0;
+}
+
+.leaflet-popup-content h4 {
+    font-size: 1.4em;
+}
+
+.leaflet-popup-content h5 {
+    font-size: 1.1em;
+    margin-bottom: 0;
+}
+
+footer {
+    padding: 2em;
+}
+
+.footer-credit {
+    grid-column: 2/8;
+    margin: auto;
+}
+
+.footer-credit a,
+.footer-credit a:hover,
+.footer-credit a:active {
+    color: var(--red);
 }
 
 /* Media queries */

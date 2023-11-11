@@ -80,10 +80,8 @@ const displayFoodbanks = (foodbanks) => {
         const foodbankCard = `
     <div class="foodbank-card grid">
     <div class="foodbank-card-text">
-
       ${foodbankContent}
       </div>
-
         <div class="foodbank-card-image">
         <img src="${urls.map}" alt="${name} google maps">
         <div class="button-row">
@@ -189,10 +187,10 @@ const closeModal = () => {
 }
 // show map view and change button colours
 const showMap = () => {
-    document.querySelector('.map-view').style.display = 'block'
     foodbankList.style.display = 'none'
     document.querySelector('.map-btn').classList.remove('inactive')
     document.querySelector('.list-btn').classList.add('inactive')
+    document.querySelector('.map-view').style.display = 'block'
     // retrieve saved tooltipdata
     getData()
 }
@@ -233,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let map = null;  // This variable will hold the map instance
 let markers = L.layerGroup()
 const setMap = (toolTipData) => {
-    console.log(toolTipData)
+    showSpinner()
     // Convert lat long string to 2 numbers for the first item
     const [firstLat, firstLng] = toolTipData[0].lat_lng.split(',').map(Number)
     // check if the map has been initialised
@@ -272,6 +270,8 @@ const setMap = (toolTipData) => {
             .addTo(markers)
             .bindPopup(item.content, popupOptions)
     })
+    // hide spinner when map is loaded
+    hideSpinner()
 }
 // save tooltipdata to localstorage to retrieve when map is rendered
 const saveData = (toolTipData) => {
