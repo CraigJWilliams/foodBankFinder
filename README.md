@@ -8,11 +8,11 @@
 
 <h2>Project Screenshots:</h2>
 
-<img src="https://raw.githubusercontent.com/CraigJWilliams/foodBankFinder/main/imgs/foodbankfinderpreview1.png" alt="project-screenshot" height="300px">
+<img src="https://raw.githubusercontent.com/CraigJWilliams/foodBankFinder/main/imgs/foodbankfinderpreview1.png" alt="project-screenshot" >
 
-<img src="https://raw.githubusercontent.com/CraigJWilliams/foodBankFinder/main/imgs/foodbankfinderpreview2.png" alt="project-screenshot" height="300px">
+<img src="https://raw.githubusercontent.com/CraigJWilliams/foodBankFinder/main/imgs/foodbankfinderpreview2.png" alt="project-screenshot" >
 
-<img src="https://raw.githubusercontent.com/CraigJWilliams/foodBankFinder/main/imgs/foodbankfinderpreview3.png" alt="project-screenshot" height="300px">
+<img src="https://raw.githubusercontent.com/CraigJWilliams/foodBankFinder/main/imgs/foodbankfinderpreview3.png" alt="project-screenshot" >
 
   
   
