@@ -256,8 +256,8 @@ const setMap = (toolTipData) => {
     // custom icon
     const logo = L.icon({
         iconUrl: 'imgs/mainLogo200x200.png',
-        iconSize: [52, 52],
-        iconAnchor: [22, 94],
+        iconSize: [60, 60],
+        iconAnchor: [30, 30],
         popupAnchor: [-3, -76]
     })
     // Iterate over each item in toolTipData
