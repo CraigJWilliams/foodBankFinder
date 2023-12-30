@@ -443,6 +443,14 @@ footer {
     color: var(--red);
 }
 
+.cjw {
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+}
+
+.cjw a {
+    color: #3f979a;
+}
+
 /* Media queries */
 
 /* small tablet styles */
