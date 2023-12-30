@@ -51,7 +51,7 @@ const displayFoodbanks = (foodbanks) => {
     // add a title, count and buttons to the content  container
     titleContainer.innerHTML = `
 <h4>Foodbanks Near You</h4>
-<p>${foodbanks.length} Results found in ${userInput.value.toUpperCase()}</p>
+<p>${foodbanks.length} Results found near ${userInput.value.toUpperCase()}</p>
 <div class="view-buttons">
 <button class="button list-btn">List View</button>
 <button class ="button inactive map-btn">Map View</button>
