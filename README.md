@@ -2,9 +2,7 @@
 
 <p id="description">Discover local food banks near you in the UK. Simply enter your postcode to find a comprehensive list of food banks in your area, complete with contact details, distance, and donation needs. Food Bank Finder makes it easy to locate and support community food banks, ensuring help is always within reach for those in need.</p>
 
-<h2>Live Website</h2>
 
-[https://foodbankfindercjw.netlify.app](https://foodbankfindercjw.netlify.app)
 
 <h2>Project Screenshots:</h2>
 
